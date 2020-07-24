@@ -1,0 +1,42 @@
+install_app:
+  #  driver: webdriver.Remote("http://localhost:4723/wd/hub", caps)
+  server: http://localhost:4723/wd/hub
+  #  implicitly_wait: cls.driver.implicitly_wait(10)
+  implicitly_wait: 10
+  caps:
+    android:
+      platformName: android
+      deviceName: hogwarts
+      appPackage: com.xueqiu.android
+      appActivity: .view.WelcomeActivityAlias
+      autoGrantPermissions: true
+      unicodeKeyboard: True
+      resetKeyboard: True
+
+    ios:
+      platformName: ios
+      deviceName: season
+
+
+
+restart_app:
+  server: http://localhost:4723/wd/hub
+  implicitly_wait: 10
+  caps:
+    android:
+      platformName: android
+      deviceName: hogwarts
+      appPackage: com.xueqiu.android
+      appActivity: .view.WelcomeActivityAlias
+      noReset: True
+      chromedriverExecutableDir: /Users/seveniruby/projects/chromedriver/2.20
+
+    ios:
+      platformName: ios
+      deviceName: season
+
+    wxmp:
+      platformName: wxmp
+      deviceName: season
+
+platform: android

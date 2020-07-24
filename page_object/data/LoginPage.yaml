@@ -5,16 +5,30 @@ loginByPassword:
   - by: id
     locator: tv_login_with_account
     action: click
-  - by: id
-    locator: login_account
+  - element: login_account
     action: sendkeys
     text: $var1
-  - by: id
-    locator: login_password
+  - element: login_password
     action: sendkeys
     text: $var2
   - by: id
     locator: button_next
     action: click
+elements:
+  login_account:
+    android:
+      by: id
+      locator: login_account
+    ios:
+      by: id
+      locator: dddd
+  login_password:
+    android:
+      by: id
+      locator: login_password
+    ios:
+      by: id
+      locator: dddd
+
 
 

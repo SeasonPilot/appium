@@ -29,21 +29,31 @@ class BasePage(object):
         po_data = yaml.load(f)
         # print(po_data)
         po_method = po_data[key]
+        # 判断.yaml中有没有elements
+        if po_data.keys().__contains__('elements'):   # 有的.yaml中是没有elements的，所以这里要做下判断
+            po_elements = po_data['elements']
+        # 按顺序取出配置参数
         for step in po_method:
             step: dict
-            element = self.driver.find_element(by=step['by'], value=step['locator'])
+            if step.keys().__contains__('element'):  # 这里是keys().  包含某个键
+                # element=self.driver.find_element(by=po_element[step['element']['platform']['by']], value=po_element[step['element']['platform']['locator']])
+                element_platform = po_elements[step['element']][AndroidClient.platform]
+            else:
+                element_platform = {'by': step['by'], 'locator': step['locator']}
+            element = self.driver.find_element(by=element_platform['by'], value=element_platform['locator'])
+
 
             if str(step['action']).lower() == 'click':
                 element.click()
             elif str(step['action']).lower() == 'sendkeys':  # 这里的'sendkeys'要和.yaml中的sendkeys一致
                 text = str(step['text'])
-                print('\n .yaml: '+text)
+                print('\n .yaml: ' + text)
                 for k, v in kwargs.items():  # 这里是取传进来的变量
-                    print('打印传进来的参数k：' + k, '打印传进来的参数v：'+ v)
+                    print('打印传进来的参数k：' + k, '打印传进来的参数v：' + v)
                     # text2 = text.replace(step['text'], v)    # 我写的，不对
-                    print('旧字符串'+("$%s" % k))
+                    print('旧字符串' + ("$%s" % k))
                     print('替换前的text :' + text)
-                    text = text.replace("$%s" % k, v)              # "$%s" % k  理解成.yaml中要替换的变量     旧字符串和替换前的text 的一致才会替换
+                    text = text.replace("$%s" % k, v)  # "$%s" % k  理解成.yaml中要替换的变量     旧字符串和替换前的text 的一致才会替换
                     print("update text: %s" % text)
                 print("变量 : %s" % text)
                 element.send_keys(text)
