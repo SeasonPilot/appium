@@ -12,13 +12,38 @@ from page_object.driver.AndroidClient import AndroidClient
 
 
 class BasePage(object):
+    # 黑名单
+    # //*[@text='弹框']/..//*[@text='确认']
+    element_black = [
+        (By.XPATH, 'ddd')
+    ]
+
     def __init__(self):  # 这里要写成构造函数
         self.driver = AndroidClient.driver
 
     def find(self, kv) -> WebElement:  # 如果链式调用的时候加了返回值后还没有click方法，就添加类型
-        # 这里做为一个参数传进来的，所以给的参数是一个元祖(By.XPATH, "//*[@text='%s']" % text)
+        # # 这里做为一个参数传进来的，所以给的参数是一个元祖(By.XPATH, "//*[@text='%s']" % text)
         return self.driver.find_element(*kv)  # 要有返回值才可以链式调用，不然就没有click方法
-        # *这里是把传进来的元祖拆分成两个参数传给self.driver.find_element方法。   *这里要进步验证  如果把上面的KV改带*会是怎么样
+        # # *这里是把传进来的元祖拆分成两个参数传给self.driver.find_element方法。   *这里要进步验证  如果把上面的KV改带*会是怎么样
+
+        # return self.find(*kv)
+# 修改后有两个`find`方法，程序没法跑。开始就应该写两个参数的`find`方法，
+    # def find(self, by, value):
+    #     # 加上重试机制
+    #     for i in range(3):
+    #         try:
+    #             element = self.driver.find_element(by, value)
+    #             return element
+    #         except:
+    #             # 找到页面的最顶层元素进行点击
+    #             # 动态变化位置的元素
+    #
+    #             # 黑名单
+    #             # //*[@text='弹框']/..//*[@text='确认']
+    #             for e in self.element_black:
+    #                 elements = self.driver.find_elements(*e)
+    #                 if elements.__sizeof__() > 0:
+    #                     elements[0].click()
 
     def findByText(self, text):
         # return self.driver.find_element(By.XPATH, "//*[@text='%s'] " % text)
@@ -30,7 +55,7 @@ class BasePage(object):
         # print(po_data)
         po_method = po_data[key]
         # 判断.yaml中有没有elements
-        if po_data.keys().__contains__('elements'):   # 有的.yaml中是没有elements的，所以这里要做下判断
+        if po_data.keys().__contains__('elements'):  # 有的.yaml中是没有elements的，所以这里要做下判断
             po_elements = po_data['elements']
         # 按顺序取出配置参数
         for step in po_method:
